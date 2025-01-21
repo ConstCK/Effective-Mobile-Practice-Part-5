@@ -48,7 +48,6 @@ class TradingService:
     async def get_filtered_tradings(self, criteria: TradingsFilter) -> list[TradingsOut]:
         # Метод для получения списка результатов торгов с указанными критериями
         # фильтрации запроса
-
         query = select(TradingResultModel.id,
                        TradingResultModel.oil_id,
                        TradingResultModel.delivery_type_id,

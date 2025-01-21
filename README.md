@@ -1,4 +1,4 @@
-# Приложение для получения данных из таблицы торгов с 'https://spimex.com/markets/oil_products/trades/results/'
+# Приложение для получения данных из БД с сайта торгов с 'https://spimex.com/markets/oil_products/trades/results/'
 
 
 * Скопируйте проект к себе на ПК при помощи: git clone https://github.com/ConstCK/Effective-Mobile-Practice-Part-5.git
@@ -19,6 +19,5 @@ Endpoints:
 * 127.0.0.1:8000/api/v1/trading/get_dates/ - Для получения указанного количества последних дат
 * 127.0.0.1:8000/api/v1/trading/get_result_by_period/ - Для получения данных торгов для указанных дат
 * 127.0.0.1:8000/api/v1/trading/get_filtered_result/ - Для получения данных торгов с указанными критериями фильтрации
-* 
 * 127.0.0.1:8000/redoc/ - Документация по типу Redoc
 * 127.0.0.1:8000/docs/ - Документация по типу Swagger
