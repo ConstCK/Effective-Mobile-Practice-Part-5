@@ -23,7 +23,7 @@ class TradingsFilter(BaseTrading):
 
 
 class DatesRequest(BaseModel):
-    number: int = Field(description='Количество последних дат торгов', default=None)
+    number: int = Field(description='Количество последних дат торгов', gt=0, default=None)
 
 
 class DatesOut(BaseModel):

@@ -18,7 +18,7 @@ class TradingResultRepository:
                                      decode_responses=True)
 
     # Добавление данных в кэш
-    async def set_data(self, key: str, items: list[Any], expire_time: int = 30) -> None:
+    async def set_data(self, key: str, items: list[Any], expire_time: int) -> None:
         for i in items:
             # Добавление строки в кэш к списку с указанным ключом
             await self.red.rpush(key, i)

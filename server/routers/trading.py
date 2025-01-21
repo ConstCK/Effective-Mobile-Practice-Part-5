@@ -15,12 +15,13 @@ router = APIRouter(prefix='/api/v1/trading')
 utils = Utils()
 
 
-@router.get('/get_dates', description='Get latest trading dates',
-            response_model=list[DatesOut],
-            status_code=status.HTTP_200_OK, name='get_latest_trading_dates',
-            responses={200: {'description': 'Успешное получение объектов'},
-                       }
-            )
+@router.post('/get_dates', description='Get latest trading dates',
+             response_model=list[DatesOut],
+             status_code=status.HTTP_200_OK, name='get_latest_trading_dates',
+             responses={200: {'description': 'Успешное получение объектов'},
+                        422: {'description': 'Ошибка валидации данных'}
+                        }
+             )
 async def get_latest_dates(db_service: Annotated[TradingService, Depends()],
                            number: Annotated[DatesRequest, Body()],
                            ):
@@ -29,18 +30,20 @@ async def get_latest_dates(db_service: Annotated[TradingService, Depends()],
     return result
 
 
-@router.get('/get_result_by_period', description='Get trading results by definite period',
-            response_model=list[TradingsOut],
-            status_code=status.HTTP_200_OK, name='get_trading_results_by_period',
-            responses={200: {'description': 'Успешное получение объектов'},
-                       }
-            )
+@router.post('/get_result_by_period', description='Get trading results by definite period',
+             response_model=list[TradingsOut],
+             status_code=status.HTTP_200_OK, name='get_trading_results_by_period',
+             responses={200: {'description': 'Успешное получение объектов'},
+                        422: {'description': 'Ошибка валидации данных'}
+                        }
+             )
 async def get_dynamics(db_service: Annotated[TradingService, Depends()],
                        period: Annotated[DatesPeriod, Body()],
                        cache: Annotated[TradingResultRepository, Depends()]):
     """Маршрут для получения результатов торгов биржи указанного периода"""
 
     # Формирования ключа для кэширования данных/получения данных из кэша
+    expire_time = utils.calculate_expire_time()
     key = utils.set_key_by_date(period)
     if await cache.key_exists(key):
         # Представление данных из кэша
@@ -57,22 +60,24 @@ async def get_dynamics(db_service: Annotated[TradingService, Depends()],
                                       delivery_basis_id=i.delivery_basis_id).model_dump_json()
                           for i in result]
         # Добавление списка с данными (строками, полученными из объектов моделей схем) в кэш
-        await cache.set_data(key, data_for_cache)
+        await cache.set_data(key, data_for_cache, expire_time)
     return result
 
 
-@router.get('/get_filtered_result', description='Get trading results by definite criteria',
-            response_model=list[TradingsOut],
-            status_code=status.HTTP_200_OK, name='get_trading_results_by_filter',
-            responses={200: {'description': 'Успешное получение объектов'},
-                       }
-            )
+@router.post('/get_filtered_result', description='Get trading results by definite criteria',
+             response_model=list[TradingsOut],
+             status_code=status.HTTP_200_OK, name='get_trading_results_by_filter',
+             responses={200: {'description': 'Успешное получение объектов'},
+                        422: {'description': 'Ошибка валидации данных'}
+                        }
+             )
 async def get_trading_results(service: Annotated[TradingService, Depends()],
                               criteria: Annotated[TradingsFilter, Body()],
                               cache: Annotated[TradingResultRepository, Depends()]):
     """Маршрут для получения результатов торгов биржи с указанными критериями
      фильтрации запроса"""
     # Формирования ключа для кэширования данных/получения данных из кэша
+    expire_time = utils.calculate_expire_time()
     key = utils.set_key_by_criteria(criteria)
     if await cache.key_exists(key):
         # Представление данных из кэша
@@ -89,6 +94,6 @@ async def get_trading_results(service: Annotated[TradingService, Depends()],
                                       delivery_basis_id=i.delivery_basis_id).model_dump_json()
                           for i in result]
         # Добавление списка с данными (строками, полученными из объектов моделей схем) в кэш
-        await cache.set_data(key, data_for_cache)
+        await cache.set_data(key, data_for_cache, expire_time)
 
     return result
