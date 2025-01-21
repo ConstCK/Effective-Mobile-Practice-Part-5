@@ -15,7 +15,7 @@ class Settings(BaseSettings):
 
     host: str = 'localhost'
 
-    redis_url: str = os.getenv('REDIS')
+    redis_url: str = f'redis://{os.getenv('REDIS')}:6379/0'
 
     # Настройки для использования переменных из .env
     model_config = SettingsConfigDict(
