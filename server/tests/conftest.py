@@ -1,4 +1,3 @@
-import asyncio
 from asyncio import get_event_loop
 
 import pytest
@@ -16,20 +15,32 @@ red = TradingResultRepository()
 
 
 # Создание стартовой фикстуры для удаления/создания таблиц в БД и наполнение их начальными данными
-@pytest_asyncio.fixture
+@pytest_asyncio.fixture(scope='module')
 async def initial_run():
-    await red.clear_cache()
     async with test_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
         await conn.execute(insert(TradingResult).values(INITIAL_DATA))
         await conn.commit()
+    yield
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+    await red.clear_cache()
 
 
 # Создание фикстуры для использования клиента для запросов по маршрутам приложения
-@pytest_asyncio.fixture(autouse=True, scope='session')
+@pytest_asyncio.fixture(scope='session')
 async def client():
     return AsyncClient(transport=ASGITransport(app=app), base_url='http://localhost')
+
+
+# Создание фикстуры для использования асинхронной сессии в CRUD методах
+@pytest_asyncio.fixture(scope='function')
+async def session():
+    async with test_session() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
 
 
 # Создание фикстуры для использования единого Even Loop для всех тестов

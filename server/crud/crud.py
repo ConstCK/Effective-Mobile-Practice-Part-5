@@ -63,3 +63,4 @@ class TradingService:
         return result.all()
 
 
+
