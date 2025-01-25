@@ -35,8 +35,8 @@ class TradingsOut(BaseTrading):
 
     model_config = ConfigDict(from_attributes=True)
 
-# class TradingsAllOut(BaseTrading):
-#     id: int = Field(description='ID результата торгов')
+
+# class CreateTradings(BaseTrading):
 #     exchange_product_id: str = Field(description='Код инструмента')
 #     exchange_product_name: str = Field(description='Наименование инструмента')
 #     delivery_basis_name: str = Field(description='Базис поставки')

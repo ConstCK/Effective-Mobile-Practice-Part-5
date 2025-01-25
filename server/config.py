@@ -1,25 +1,35 @@
-import os
-
-from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-load_dotenv()
 
 
 class Settings(BaseSettings):
     """
     Базовые настройки приложения
     """
-    db_url: str = (f"postgresql+asyncpg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-                   f"@{os.getenv('DB_HOST')}:5432/{os.getenv('DB_NAME')}")
+
+    DB_NAME: str
+    DB_HOST: str
+    DB_PORT: str
+    DB_USER: str
+    DB_PASSWORD: str
+    REDIS: str
 
     host: str = 'localhost'
 
-    redis_url: str = f'redis://{os.getenv('REDIS')}:6379/0'
+    @property
+    def db_url(self):
+        return f'postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:5432/{self.DB_NAME}'
 
-    # Настройки для использования переменных из .env
+    # @property
+    # def test_db_url(self):
+    #     return f'postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:5432/{self.TEST_DB_NAME}'
+
+    @property
+    def redis_url(self):
+        return f'redis://{self.REDIS}:6379/0'
+
+    # Настройки для использования переменных из ..env
     model_config = SettingsConfigDict(
-        env_file='.env', env_file_encoding='utf-8', extra='allow')
+        env_file='../.env', env_file_encoding='utf-8', extra='allow')
 
 
 settings = Settings()

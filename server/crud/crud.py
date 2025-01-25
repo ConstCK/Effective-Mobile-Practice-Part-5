@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.db import get_db
 from schemas.trading import (DatesOut, DatesPeriod,
-                             TradingsFilter, TradingsOut, )
+                             TradingsFilter, TradingsOut)
 from models.trading import TradingResult as TradingResultModel
 
 
@@ -61,3 +61,5 @@ class TradingService:
             query = query.where(TradingResultModel.delivery_basis_id == criteria.delivery_basis_id)
         result = await self.session.execute(query)
         return result.all()
+
+

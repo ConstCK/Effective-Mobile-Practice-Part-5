@@ -1,5 +1,7 @@
 import datetime
 import decimal
+
+from pydantic import Field
 from sqlalchemy import UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column
 

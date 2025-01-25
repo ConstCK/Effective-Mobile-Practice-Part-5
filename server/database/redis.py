@@ -1,4 +1,3 @@
-import json
 from typing import Any
 
 from config import settings
@@ -27,7 +26,8 @@ class TradingResultRepository:
         # Возвращает список элементов с 0 индекса до последнего включительно
         data = await self.red.lrange(key, 0, -1)
         if data:
-            return [json.loads(i) for i in data]
+            # return [json.loads(i) for i in data]
+            return [TradingsOut.model_validate_json(i) for i in data]
         return []
 
     # Получение всех ключей БД
@@ -40,4 +40,5 @@ class TradingResultRepository:
 
     # Очистка кэша
     async def clear_cache(self):
+        print('Clearing cache...')
         await self.red.flushall()

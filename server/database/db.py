@@ -8,6 +8,11 @@ engine = create_async_engine(settings.db_url, echo=True)
 # Сессия для связи с БД
 async_session = async_sessionmaker(
     bind=engine, autocommit=False, autoflush=False)
+# Движок для связи с БД при тестировании
+test_engine = create_async_engine(settings.db_url, echo=True)
+# Сессия для связи с БД при тестировании
+test_session = async_sessionmaker(
+    bind=test_engine, autocommit=False, autoflush=False, expire_on_commit=False)
 
 
 # Создание класса-родителя для наследования при создании моделей
