@@ -44,7 +44,7 @@ async def session():
 
 
 # Создание фикстуры для использования единого Even Loop для всех тестов
-@pytest.fixture(scope="module")
+@pytest_asyncio.fixture(scope="session")
 def event_loop():
     loop = get_event_loop()
     yield loop

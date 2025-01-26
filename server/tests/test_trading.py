@@ -36,6 +36,7 @@ async def test_get_filtered_tradings(session):
 
     assert len(response) == 2
 
+
 # Тест функции для получения результатов торгов с некорректными критериями
 @pytest.mark.asyncio
 async def test_get_filtered_tradings(session):
