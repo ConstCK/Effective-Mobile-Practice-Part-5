@@ -39,7 +39,7 @@ async def test_get_filtered_tradings(session):
 
 # Тест функции для получения результатов торгов с некорректными критериями
 @pytest.mark.asyncio
-async def test_get_filtered_tradings(session):
+async def test_get_error_with_filtered_tradings(session):
     service = TradingService(session)
     with pytest.raises(ValidationError):
         await service.get_filtered_tradings(criteria=TradingsFilter.model_validate('Wrong type of data'))
